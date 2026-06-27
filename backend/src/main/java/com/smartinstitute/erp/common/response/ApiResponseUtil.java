@@ -37,12 +37,12 @@ public final class ApiResponseUtil {
     }
 
     /**
-     * Success response without data.
+     * Success Message response without data.
      *
      * @param message Success message
      * @return ApiResponse
      */
-    public static ApiResponse<Void> success(String message) {
+    public static ApiResponse<Void> successMessage(String message) {
 
         return ApiResponse.<Void>builder()
                 .success(true)
@@ -54,7 +54,7 @@ public final class ApiResponseUtil {
 
     /**
      * Error response with a single error.
-     *
+     * will avoid using this
      * @param message Main error message
      * @param error   Error description
      * @return ApiResponse
@@ -86,4 +86,19 @@ public final class ApiResponseUtil {
                 .build();
     }
 
+    /**
+     * Error response with only a message.
+     *
+     * Example:
+     * Student not found
+     */
+    public static ApiResponse<Void> error(String message) {
+
+        return ApiResponse.<Void>builder()
+                .success(false)
+                .message(message)
+                .data(null)
+                .errors(null)
+                .build();
+    }
 }
