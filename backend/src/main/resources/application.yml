@@ -5,6 +5,9 @@ spring:
   profiles:
     active: dev
 
+application:
+  version: 0.1.0
+
 server:
   port: 8080
 

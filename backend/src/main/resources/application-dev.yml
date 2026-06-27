@@ -1,7 +1,7 @@
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/smart_institute_erp
-    username: root
+    username: postgres
     password: root
     driver-class-name: org.postgresql.Driver
 
