@@ -1,5 +1,7 @@
 package com.smartinstitute.erp.common.response;
 
+import com.smartinstitute.erp.common.enums.ResponseStatus;
+
 import java.util.Collections;
 import java.util.List;
 
@@ -99,6 +101,19 @@ public final class ApiResponseUtil {
                 .message(message)
                 .data(null)
                 .errors(null)
+                .build();
+    }
+
+    public static <T> ApiResponse<T> error(
+            String message,
+            ResponseStatus status,
+            Object errors) {
+
+        return ApiResponse.<T>builder()
+                .success(false)
+                .status(status)
+                .message(message)
+                .errors(errors)
                 .build();
     }
 }

@@ -1,5 +1,7 @@
 package com.smartinstitute.erp.common.response;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.smartinstitute.erp.common.enums.ResponseStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,12 +19,18 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ApiResponse<T> {
 
     /**
      * Indicates whether the request was successful.
      */
     private boolean success;
+
+    /**
+     * SUCCESS | FAILED | ERROR
+     */
+    private ResponseStatus status;
 
     /**
      * Human-readable response message.
@@ -39,7 +47,7 @@ public class ApiResponse<T> {
      * List of validation or business errors.
      * Null for successful responses.
      */
-    private List<String> errors;
+    private Object errors;
 
     /**
      * Timestamp when the response was generated.

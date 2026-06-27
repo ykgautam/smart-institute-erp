@@ -1,9 +1,8 @@
 package com.smartinstitute.erp.role.entity;
 
 import com.smartinstitute.erp.common.entity.BaseEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import com.smartinstitute.erp.common.enums.RoleType;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,8 +16,12 @@ import lombok.Setter;
 @AllArgsConstructor
 public class Role extends BaseEntity {
 
+//    @Column(nullable = false, unique = true, length = 50)
+//    private String name;
+
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false, unique = true, length = 50)
-    private String name;
+    private RoleType name;
 
     @Column(length = 255)
     private String description;
