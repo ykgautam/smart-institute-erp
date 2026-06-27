@@ -8,11 +8,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import static com.smartinstitute.erp.common.constants.ApiConstants.HEALTH;
+
 /**
  * Health check endpoints.
  */
 @RestController
-@RequestMapping("/api/v1/health")
+@RequestMapping(HEALTH)
 @RequiredArgsConstructor
 public class HealthController {
 
