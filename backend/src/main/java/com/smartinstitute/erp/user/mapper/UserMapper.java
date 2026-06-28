@@ -22,8 +22,8 @@ public class UserMapper {
         user.setEmail(request.getEmail());
         user.setMobile(request.getMobile());
 
-        // Password hashing will be added in Sprint 1.11
-        user.setPassword(request.getPassword());
+        // Password will be encoded in UserService
+//      user.setPassword(request.getPassword());
 
         user.setGender(request.getGender());
         user.setStatus(UserStatus.ACTIVE);

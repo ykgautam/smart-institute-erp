@@ -16,6 +16,7 @@ import com.smartinstitute.erp.user.repository.UserRepository;
 import com.smartinstitute.erp.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,6 +30,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final UserMapper userMapper;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public UserResponse createUser(CreateUserRequest request) {
@@ -42,6 +44,9 @@ public class UserServiceImpl implements UserService {
                         new ResourceNotFoundException("Role not found with id : " + request.getRoleId()));
 
         User user = userMapper.toEntity(request, role);
+        user.setPassword(
+                passwordEncoder.encode(request.getPassword())
+        );
 
         user.setStatus(UserStatus.ACTIVE);
 

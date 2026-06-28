@@ -1,0 +1,29 @@
+package com.smartinstitute.erp.auth.controller;
+
+import com.smartinstitute.erp.auth.dto.LoginRequest;
+import com.smartinstitute.erp.auth.dto.LoginResponse;
+import com.smartinstitute.erp.auth.service.AuthService;
+import com.smartinstitute.erp.common.response.ApiResponse;
+import com.smartinstitute.erp.common.response.ApiResponseUtil;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/api/v1/auth")
+@RequiredArgsConstructor
+public class AuthController {
+
+    private final AuthService authService;
+
+    @PostMapping("/login")
+    public ApiResponse<LoginResponse> login(
+            @Valid @RequestBody LoginRequest request) {
+
+        return ApiResponseUtil.success(
+                authService.login(request),
+                "Login successful."
+        );
+    }
+
+}
