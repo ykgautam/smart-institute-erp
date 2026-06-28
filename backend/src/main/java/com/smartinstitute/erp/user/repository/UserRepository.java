@@ -1,16 +1,35 @@
 package com.smartinstitute.erp.user.repository;
 
+import com.smartinstitute.erp.common.enums.UserStatus;
 import com.smartinstitute.erp.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
+
 @Repository
-public interface UserRepository extends JpaRepository<User,Long> {
+public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByEmail(String email);
 
     boolean existsByEmail(String email);
+
+    Optional<User> findById(Long id);
+
+    Optional<User> findByIdAndStatusNot(Long id, UserStatus status);
+
+    List<User> findAll();
+
+    Optional<User> findByEmailAndStatusNot(String email, UserStatus status);
+
+    List<User> findByStatusNotOrderByCreatedAtDesc(UserStatus status);
+    
+//    List<User> findByStatusNot(UserStatus userStatus);
+
+//    List<User> findByIdAndStatusNot(Long id, UserStatus userStatus);
+
+
 
 }

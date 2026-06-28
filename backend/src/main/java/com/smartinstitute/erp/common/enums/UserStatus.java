@@ -4,6 +4,7 @@ public enum UserStatus {
 
     ACTIVE,
     INACTIVE,
-    LOCKED
+    LOCKED,
+    DELETED
 
 }
