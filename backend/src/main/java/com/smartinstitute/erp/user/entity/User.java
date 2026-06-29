@@ -3,6 +3,7 @@ package com.smartinstitute.erp.user.entity;
 import com.smartinstitute.erp.common.entity.BaseEntity;
 import com.smartinstitute.erp.common.enums.Gender;
 import com.smartinstitute.erp.common.enums.UserStatus;
+import com.smartinstitute.erp.institute.entity.Institute;
 import com.smartinstitute.erp.role.entity.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -43,5 +44,9 @@ public class User extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="role_id",nullable = false)
     private Role role;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "institute_id")
+    private Institute institute;
 
 }
