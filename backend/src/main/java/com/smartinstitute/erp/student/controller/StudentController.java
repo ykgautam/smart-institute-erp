@@ -17,6 +17,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import com.smartinstitute.erp.common.enums.SortDirection;
+import com.smartinstitute.erp.common.pagination.PageResponse;
+import com.smartinstitute.erp.common.pagination.PaginationRequest;
+import io.swagger.v3.oas.annotations.Parameter;
 
 import java.util.List;
 
@@ -93,17 +97,79 @@ public class StudentController {
         );
     }
 
-    @GetMapping
+    @GetMapping("/getAll")
     @PreAuthorize("hasAnyRole('SUPER_ADMIN','INSTITUTE_ADMIN','STAFF','FACULTY')")
     public ResponseEntity<ApiResponse<List<StudentResponse>>> getAllStudents() {
 
         return ResponseEntity.ok(
                 ApiResponseUtil.success(
-                        studentService.getAllStudents(),
+                        studentService.getAllStudents1(),
                         "Students fetched successfully."
                 )
         );
     }
+
+    @GetMapping
+    @PreAuthorize("hasAnyRole('SUPER_ADMIN','INSTITUTE_ADMIN','STAFF','FACULTY')")
+    @Operation(
+            summary = "Get Students",
+            description = "Returns paginated students of the logged-in institute.",
+            security = @SecurityRequirement(name = "Bearer Authentication")
+    )
+    public ResponseEntity<ApiResponse<PageResponse<StudentResponse>>> getStudents(
+            @Valid @ModelAttribute PaginationRequest request) {
+
+        return ResponseEntity.ok(
+                ApiResponseUtil.success(
+                        studentService.getStudents(request),
+                        "Students fetched successfully."
+                )
+        );
+    }
+
+//    @GetMapping
+//    @PreAuthorize("hasAnyRole('SUPER_ADMIN','INSTITUTE_ADMIN','STAFF','FACULTY')")
+//    @Operation(
+//            summary = "Get Students",
+//            description = "Returns paginated students of the logged-in institute.",
+//            security = @SecurityRequirement(name = "Bearer Authentication")
+//    )
+//    public ResponseEntity<ApiResponse<PageResponse<StudentResponse>>> getStudents(
+//
+//            @RequestParam(defaultValue = "0")
+//            @Parameter(description = "Page number", example = "0")
+//            int page,
+//
+//            @RequestParam(defaultValue = "10")
+//            @Parameter(description = "Page size", example = "10")
+//            int size,
+//
+//            @RequestParam(defaultValue = "id")
+//            @Parameter(description = "Sort field", example = "firstName")
+//            String sortBy,
+//
+//            @RequestParam(defaultValue = "ASC")
+//            @Parameter(description = "Sort direction", example = "ASC")
+//            SortDirection direction,
+//
+//            @RequestParam(required = false)
+//            @Parameter(description = "Search keyword", example = "Rahul")
+//            String keyword) {
+//
+//        PaginationRequest request = new PaginationRequest();
+//        request.setPage(page);
+//        request.setSize(size);
+//        request.setSortBy(sortBy);
+//        request.setDirection(direction);
+//        request.setKeyword(keyword);
+//
+//        return ResponseEntity.ok(
+//                ApiResponseUtil.success(
+//                        studentService.getStudents(request),
+//                        "Students fetched successfully."
+//                )
+//        );
+//    }
 
     @GetMapping("/search")
     @PreAuthorize("hasAnyRole('SUPER_ADMIN','INSTITUTE_ADMIN','STAFF','FACULTY')")

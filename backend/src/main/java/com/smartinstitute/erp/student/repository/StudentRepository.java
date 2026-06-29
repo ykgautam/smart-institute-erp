@@ -3,6 +3,7 @@ package com.smartinstitute.erp.student.repository;
 import com.smartinstitute.erp.institute.entity.Institute;
 import com.smartinstitute.erp.student.entity.Student;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -10,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface StudentRepository
-        extends JpaRepository<Student, Long> {
+        extends JpaRepository<Student, Long>, JpaSpecificationExecutor<Student> {
 
     Optional<Student> findByIdAndActiveTrue(Long id);
 
