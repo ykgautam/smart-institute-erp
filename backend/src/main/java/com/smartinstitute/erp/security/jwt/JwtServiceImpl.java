@@ -35,13 +35,13 @@ public class JwtServiceImpl implements JwtService {
 
         String username = extractUsername(token);
 
-        String tokenType = extractClaim(
-                token,
-                claims -> claims.get(JwtClaims.TOKEN_TYPE, String.class)
-        );
+//        String tokenType = extractClaim(
+//                token,
+//                claims -> claims.get(JwtClaims.TOKEN_TYPE, String.class)
+//        );
 
         return username.equals(userDetails.getUsername())
-                && JwtTokenType.ACCESS.name().equals(tokenType)
+//                && JwtTokenType.ACCESS.name().equals(tokenType)
                 && !isTokenExpired(token);
     }
 
@@ -149,5 +149,19 @@ public class JwtServiceImpl implements JwtService {
                 .expiration(expiry)
                 .signWith(getSigningKey(), Jwts.SIG.HS256)
                 .compact();
+    }
+
+    @Override
+    public String extractTokenType(String token) {
+
+        return extractClaim(
+                token,
+                claims -> claims.get(JwtClaims.TOKEN_TYPE, String.class)
+        );
+    }
+
+    public Claims extractClaims(String token) {
+
+        return extractAllClaims(token);
     }
 }

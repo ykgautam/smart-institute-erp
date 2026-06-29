@@ -6,12 +6,14 @@ import com.smartinstitute.erp.common.response.ApiResponse;
 import com.smartinstitute.erp.common.response.ApiResponseUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -94,6 +96,19 @@ public class GlobalExceptionHandler {
                         "Something went wrong.",
                         ResponseStatus.ERROR,
                         null));
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ApiResponse<Object>> handleAccessDenied(
+            AccessDeniedException ex) {
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(ApiResponse.<Object>builder()
+                        .success(false)
+                        .status(ResponseStatus.ERROR)
+                        .message("Access Denied.")
+                        .timestamp(LocalDateTime.now())
+                        .build());
     }
 
 }

@@ -14,13 +14,13 @@ public class AuthenticationConfig {
 
     private final CustomUserDetailsService userDetailsService;
 
-    @Bean
-    public AuthenticationManager authenticationManager(
-            AuthenticationConfiguration configuration)
-            throws Exception {
-
-        return configuration.getAuthenticationManager();
-    }
+//    @Bean
+//    public AuthenticationManager authenticationManager(
+//            AuthenticationConfiguration configuration)
+//            throws Exception {
+//
+//        return configuration.getAuthenticationManager();
+//    }
 
 
 }
