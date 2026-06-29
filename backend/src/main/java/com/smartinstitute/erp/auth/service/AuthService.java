@@ -1,5 +1,6 @@
 package com.smartinstitute.erp.auth.service;
 
+import com.smartinstitute.erp.auth.dto.ChangePasswordRequest;
 import com.smartinstitute.erp.auth.dto.LoginRequest;
 import com.smartinstitute.erp.auth.dto.LoginResponse;
 import com.smartinstitute.erp.auth.dto.RefreshTokenRequest;
@@ -12,4 +13,8 @@ public interface AuthService {
     LoginResponse refreshToken(RefreshTokenRequest request);
 
     UserResponse getCurrentUser();
+
+    void logout();
+
+    void changePassword(ChangePasswordRequest request);
 }

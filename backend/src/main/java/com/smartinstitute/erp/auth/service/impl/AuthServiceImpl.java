@@ -1,5 +1,6 @@
 package com.smartinstitute.erp.auth.service.impl;
 
+import com.smartinstitute.erp.auth.dto.ChangePasswordRequest;
 import com.smartinstitute.erp.auth.dto.LoginRequest;
 import com.smartinstitute.erp.auth.dto.LoginResponse;
 import com.smartinstitute.erp.auth.dto.RefreshTokenRequest;
@@ -19,7 +20,9 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -30,6 +33,7 @@ public class AuthServiceImpl implements AuthService {
     private final JwtProperties jwtProperties;
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public LoginResponse login(LoginRequest request) {
@@ -116,5 +120,60 @@ public class AuthServiceImpl implements AuthService {
                 (CustomUserDetails) authentication.getPrincipal();
 
         return userMapper.toResponse(principal.getUser());
+    }
+
+    @Override
+    public void logout() {
+
+        /*
+         * Stateless JWT Logout
+         *
+         * Nothing to invalidate on server.
+         *
+         * Client must remove:
+         *  - Access Token
+         *  - Refresh Token
+         */
+    }
+
+    @Override
+    @Transactional
+    public void changePassword(ChangePasswordRequest request) {
+
+        Authentication authentication =
+                SecurityContextHolder.getContext().getAuthentication();
+
+        CustomUserDetails principal =
+                (CustomUserDetails) authentication.getPrincipal();
+
+        User user = principal.getUser();
+
+        if (!passwordEncoder.matches(
+                request.getCurrentPassword(),
+                user.getPassword())) {
+
+            throw new BadCredentialsException(
+                    "Current password is incorrect.");
+        }
+
+        if (!request.getNewPassword()
+                .equals(request.getConfirmPassword())) {
+
+            throw new IllegalArgumentException(
+                    "New password and confirm password do not match.");
+        }
+
+        if (passwordEncoder.matches(
+                request.getNewPassword(),
+                user.getPassword())) {
+
+            throw new IllegalArgumentException(
+                    "New password must be different from current password.");
+        }
+
+        user.setPassword(
+                passwordEncoder.encode(request.getNewPassword()));
+
+        userRepository.save(user);
     }
 }

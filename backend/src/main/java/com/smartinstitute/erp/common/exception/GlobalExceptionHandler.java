@@ -7,6 +7,7 @@ import com.smartinstitute.erp.common.response.ApiResponseUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -107,6 +108,19 @@ public class GlobalExceptionHandler {
                         .success(false)
                         .status(ResponseStatus.ERROR)
                         .message("Access Denied.")
+                        .timestamp(LocalDateTime.now())
+                        .build());
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<ApiResponse<Object>> handleBadCredential(
+            BadCredentialsException ex) {
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(ApiResponse.<Object>builder()
+                        .success(false)
+                        .status(ResponseStatus.ERROR)
+                        .message(ex.getMessage())
                         .timestamp(LocalDateTime.now())
                         .build());
     }
