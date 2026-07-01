@@ -1,6 +1,7 @@
 package com.smartinstitute.erp.user.repository;
 
 import com.smartinstitute.erp.common.enums.UserStatus;
+import com.smartinstitute.erp.institute.entity.Institute;
 import com.smartinstitute.erp.user.entity.User;
 import jakarta.validation.constraints.Pattern;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -44,15 +45,16 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     List<User> findByStatusNotOrderByCreatedAtDesc(UserStatus status);
 
-    boolean existsByMobile(@Pattern(
-            regexp = "^[0-9]{10}$",
-            message = "Mobile must contain exactly 10 digits."
-    ) String mobile);
+    boolean existsByMobile(@Pattern(regexp = "^[0-9]{10}$", message = "Mobile must contain exactly 10 digits.") String mobile);
 
 //    List<User> findByStatusNot(UserStatus userStatus);
 
 //    List<User> findByIdAndStatusNot(Long id, UserStatus userStatus);
 
+//    Optional<User> findByIdAndInstituteAndActiveTrue(Long id, Institute institute);
 
-
+    Optional<User> findByIdAndInstituteAndStatus(
+            Long id,
+            Institute institute,
+            UserStatus status);
 }

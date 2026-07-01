@@ -1,5 +1,6 @@
 package com.smartinstitute.erp.student.entity;
 
+import com.smartinstitute.erp.batch.entity.Batch;
 import com.smartinstitute.erp.common.entity.BaseEntity;
 import com.smartinstitute.erp.common.enums.Gender;
 import com.smartinstitute.erp.common.enums.StudentStatus;
@@ -97,5 +98,9 @@ public class Student extends BaseEntity {
             nullable = false
     )
     private Institute institute;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "batch_id")
+    private Batch batch;
 
 }
