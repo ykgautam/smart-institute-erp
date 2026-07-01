@@ -38,4 +38,5 @@ public interface BatchRepository extends
             Long id
     );
 
+    Optional<Batch> findByIdAndInstitute(Long id, Institute institute);
 }

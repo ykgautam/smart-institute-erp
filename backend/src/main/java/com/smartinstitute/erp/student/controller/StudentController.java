@@ -6,6 +6,7 @@ import com.smartinstitute.erp.student.dto.CreateStudentRequest;
 import com.smartinstitute.erp.student.dto.StudentResponse;
 import com.smartinstitute.erp.student.dto.StudentStatusRequest;
 import com.smartinstitute.erp.student.dto.UpdateStudentRequest;
+import com.smartinstitute.erp.student.dto.request.AssignStudentBatchRequest;
 import com.smartinstitute.erp.student.service.StudentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -213,4 +214,35 @@ public class StudentController {
         );
     }
 
+    @PutMapping("/{studentId}/batch")
+    @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN')")
+    public ApiResponse<StudentResponse> assignStudentToBatch(
+            @PathVariable Long studentId,
+            @Valid @RequestBody AssignStudentBatchRequest request) {
+
+        StudentResponse response =
+                studentService.assignStudentToBatch(
+                        studentId,
+                        request
+                );
+
+        return ApiResponseUtil.success(
+                response,
+                "Student assigned to batch successfully."
+        );
+    }
+
+    @DeleteMapping("/{studentId}/batch")
+    @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN')")
+    public ApiResponse<StudentResponse> removeStudentFromBatch(
+            @PathVariable Long studentId) {
+
+        StudentResponse response =
+                studentService.removeStudentFromBatch(studentId);
+
+        return ApiResponseUtil.success(
+                response,
+                "Student removed from batch successfully."
+        );
+    }
 }

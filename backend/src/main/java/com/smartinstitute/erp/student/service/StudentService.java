@@ -6,6 +6,7 @@ import com.smartinstitute.erp.student.dto.CreateStudentRequest;
 import com.smartinstitute.erp.student.dto.StudentResponse;
 import com.smartinstitute.erp.student.dto.StudentStatusRequest;
 import com.smartinstitute.erp.student.dto.UpdateStudentRequest;
+import com.smartinstitute.erp.student.dto.request.AssignStudentBatchRequest;
 
 import java.util.List;
 
@@ -27,4 +28,10 @@ public interface StudentService {
 
     PageResponse<StudentResponse> getStudents(PaginationRequest request);
 
+    StudentResponse assignStudentToBatch(
+            Long studentId,
+            AssignStudentBatchRequest request
+    );
+
+    StudentResponse removeStudentFromBatch(Long studentId);
 }

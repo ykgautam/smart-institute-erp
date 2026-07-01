@@ -1,5 +1,6 @@
 package com.smartinstitute.erp.student.service.impl;
 
+import com.smartinstitute.erp.batch.repository.BatchRepository;
 import com.smartinstitute.erp.common.exception.InvalidRequestException;
 import com.smartinstitute.erp.common.exception.ResourceNotFoundException;
 import com.smartinstitute.erp.common.pagination.PageResponse;
@@ -27,8 +28,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
+import com.smartinstitute.erp.batch.entity.Batch;
+import com.smartinstitute.erp.batch.repository.BatchRepository;
+import com.smartinstitute.erp.student.dto.request.AssignStudentBatchRequest;
+import com.smartinstitute.erp.common.exception.BadRequestException;
+import com.smartinstitute.erp.common.exception.ResourceNotFoundException;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Slf4j
@@ -41,13 +47,17 @@ public class StudentServiceImpl extends BaseCrudService implements StudentServic
 
     private final StudentValidationService validationService;
 
-    public StudentServiceImpl(SecurityUtil securityUtil, InstituteAccessValidator instituteAccessValidator, StudentRepository studentRepository, StudentMapper studentMapper, StudentValidationService validationService) {
+    private final BatchRepository batchRepository;
+
+    public StudentServiceImpl(SecurityUtil securityUtil, InstituteAccessValidator instituteAccessValidator, StudentRepository studentRepository, StudentMapper studentMapper, StudentValidationService validationService,
+                              BatchRepository batchRepository) {
 
         super(securityUtil, instituteAccessValidator);
 
         this.studentRepository = studentRepository;
         this.studentMapper = studentMapper;
         this.validationService = validationService;
+        this.batchRepository=batchRepository;
     }
 
     @Override
@@ -173,4 +183,85 @@ public class StudentServiceImpl extends BaseCrudService implements StudentServic
         );
     }
 
+    @Override
+    @Transactional
+    public StudentResponse assignStudentToBatch(
+            Long studentId,
+            AssignStudentBatchRequest request) {
+
+        Institute currentInstitute = getCurrentInstitute();
+
+        Student student = studentRepository
+                .findByIdAndInstitute(studentId, currentInstitute)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "Student not found."));
+
+        Batch batch = batchRepository
+                .findByIdAndInstitute(
+                        request.getBatchId(),
+                        currentInstitute)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "Batch not found."));
+
+        if (!Boolean.TRUE.equals(student.getActive())) {
+            throw new BadRequestException(
+                    "Student is inactive.");
+        }
+
+        if (!Boolean.TRUE.equals(batch.getActive())) {
+            throw new BadRequestException(
+                    "Batch is inactive.");
+        }
+
+        if (student.getBatch() != null) {
+            throw new BadRequestException(
+                    "Student is already assigned to a batch.");
+        }
+
+        long currentStrength =
+                studentRepository.countByBatch(batch);
+
+        if (currentStrength >= batch.getCapacity()) {
+            throw new BadRequestException(
+                    "Batch capacity has been reached.");
+        }
+
+        student.setBatch(batch);
+
+        Student savedStudent =
+                studentRepository.save(student);
+
+        return studentMapper.toResponse(savedStudent);
+    }
+
+    @Override
+    @Transactional
+    public StudentResponse removeStudentFromBatch(Long studentId) {
+
+        Institute currentInstitute = getCurrentInstitute();
+
+        Student student = studentRepository
+                .findByIdAndInstituteAndActiveTrue(
+                        studentId,
+                        currentInstitute
+                )
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "Student not found."
+                        ));
+
+        if (student.getBatch() == null) {
+            throw new BadRequestException(
+                    "Student is not assigned to any batch."
+            );
+        }
+
+        student.setBatch(null);
+
+        Student savedStudent = studentRepository.save(student);
+
+        return studentMapper.toResponse(savedStudent);
+    }
 }

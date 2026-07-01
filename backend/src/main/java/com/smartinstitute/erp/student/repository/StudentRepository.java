@@ -1,5 +1,6 @@
 package com.smartinstitute.erp.student.repository;
 
+import com.smartinstitute.erp.batch.entity.Batch;
 import com.smartinstitute.erp.institute.entity.Institute;
 import com.smartinstitute.erp.student.entity.Student;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -78,4 +79,18 @@ public interface StudentRepository
             @Param("institute") Institute institute
     );
 
+    long countByBatch(Batch batch);
+
+    //get students by batch
+    List<Student> findByBatch(Batch batch);
+
+    //Get unassigned students
+    List<Student> findByBatchIsNullAndInstitute(Institute institute);
+
+    Optional<Student> findByIdAndInstitute(
+            Long id,
+            Institute institute
+    );
+
+    Optional<Student> findByIdAndInstituteAndActiveTrue(Long studentId, Institute institute);
 }
