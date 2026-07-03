@@ -1,5 +1,6 @@
 package com.smartinstitute.erp.student.entity;
 
+import com.smartinstitute.erp.attendance.entity.Attendance;
 import com.smartinstitute.erp.batch.entity.Batch;
 import com.smartinstitute.erp.common.entity.BaseEntity;
 import com.smartinstitute.erp.common.enums.Gender;
@@ -11,6 +12,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(
@@ -103,4 +105,6 @@ public class Student extends BaseEntity {
     @JoinColumn(name = "batch_id")
     private Batch batch;
 
+    @OneToMany(mappedBy = "student")
+    private List<Attendance> attendances;
 }
