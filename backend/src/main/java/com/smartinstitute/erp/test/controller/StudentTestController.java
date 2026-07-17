@@ -2,10 +2,9 @@ package com.smartinstitute.erp.test.controller;
 
 import com.smartinstitute.erp.common.response.ApiResponse;
 import com.smartinstitute.erp.common.response.ApiResponseUtil;
+import com.smartinstitute.erp.test.dto.request.SaveAnswerRequest;
 import com.smartinstitute.erp.test.dto.request.StartTestRequest;
-import com.smartinstitute.erp.test.dto.response.QuestionForStudentResponse;
-import com.smartinstitute.erp.test.dto.response.StudentTestResponse;
-import com.smartinstitute.erp.test.dto.response.StudentTestSummaryResponse;
+import com.smartinstitute.erp.test.dto.response.*;
 import com.smartinstitute.erp.test.service.StudentTestService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -103,4 +102,65 @@ public class StudentTestController {
         );
     }
 
+    @PostMapping("/{studentTestId}/answers")
+    @PreAuthorize("hasAnyRole('STUDENT','SUPER_ADMIN')")
+    @Operation(summary = "Save Student Answer")
+    public ResponseEntity<ApiResponse<StudentAnswerResponse>> saveAnswer(
+            @PathVariable Long studentTestId,
+            @Valid @RequestBody SaveAnswerRequest request) {
+
+        return ResponseEntity.ok(
+                ApiResponseUtil.success(
+                        studentTestService.saveAnswer(
+                                studentTestId,
+                                request
+                        ),
+                        "Answer saved successfully."
+                )
+        );
+    }
+
+    @GetMapping("/{studentTestId}/answers")
+    @PreAuthorize("hasAnyRole('STUDENT','SUPER_ADMIN')")
+    @Operation(summary = "Get Saved Answers")
+    public ResponseEntity<ApiResponse<List<StudentAnswerResponse>>> getSavedAnswers(
+            @PathVariable Long studentTestId) {
+
+        return ResponseEntity.ok(
+                ApiResponseUtil.success(
+                        studentTestService.getSavedAnswers(studentTestId),
+                        "Saved answers fetched successfully."
+                )
+        );
+    }
+
+    @PostMapping("/{studentTestId}/submit")
+    @PreAuthorize("hasAnyRole('STUDENT','SUPER_ADMIN')")
+    @Operation(summary = "Submit Student Test")
+    public ResponseEntity<ApiResponse<Void>> submitTest(
+            @PathVariable Long studentTestId) {
+
+        studentTestService.submitTest(studentTestId);
+
+        return ResponseEntity.ok(
+                ApiResponseUtil.success(
+                        null,
+                        "Test submitted successfully."
+                )
+        );
+    }
+
+    @GetMapping("/{studentTestId}/result")
+    @PreAuthorize("hasAnyRole('STUDENT','SUPER_ADMIN')")
+    @Operation(summary = "Get Student Test Result")
+    public ResponseEntity<ApiResponse<StudentTestResultResponse>> getResult(
+            @PathVariable Long studentTestId) {
+
+        return ResponseEntity.ok(
+                ApiResponseUtil.success(
+                        studentTestService.getResult(studentTestId),
+                        "Result fetched successfully."
+                )
+        );
+    }
 }
