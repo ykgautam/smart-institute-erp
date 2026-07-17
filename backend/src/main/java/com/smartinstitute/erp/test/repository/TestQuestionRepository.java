@@ -30,4 +30,6 @@ public interface TestQuestionRepository extends JpaRepository<TestQuestion, Long
             Test test,
             Question question
     );
+
+
 }
