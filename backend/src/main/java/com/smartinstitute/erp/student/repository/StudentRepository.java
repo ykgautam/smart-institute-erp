@@ -93,4 +93,6 @@ public interface StudentRepository
     );
 
     Optional<Student> findByIdAndInstituteAndActiveTrue(Long studentId, Institute institute);
+
+    Optional<Student> findByUserId(Long userId);
 }

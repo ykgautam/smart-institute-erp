@@ -6,6 +6,7 @@ import com.smartinstitute.erp.common.entity.BaseEntity;
 import com.smartinstitute.erp.common.enums.Gender;
 import com.smartinstitute.erp.common.enums.StudentStatus;
 import com.smartinstitute.erp.institute.entity.Institute;
+import com.smartinstitute.erp.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -107,4 +108,8 @@ public class Student extends BaseEntity {
 
     @OneToMany(mappedBy = "student")
     private List<Attendance> attendances;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 }
