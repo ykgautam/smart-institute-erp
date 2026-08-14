@@ -21,4 +21,5 @@ public class CoursePerformanceResponse {
 
     private Double passPercentage;
 
+
 }

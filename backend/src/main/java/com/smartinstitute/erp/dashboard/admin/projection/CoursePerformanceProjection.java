@@ -1,4 +1,6 @@
-package com.smartinstitute.erp.dashboard.projection;
+package com.smartinstitute.erp.dashboard.admin.projection;
+
+import java.math.BigDecimal;
 
 public interface CoursePerformanceProjection {
 
@@ -10,8 +12,5 @@ public interface CoursePerformanceProjection {
 
     Long getTestsPassed();
 
-    Double getAveragePercentage();
-
-    Double getPassPercentage();
-
+    BigDecimal getAveragePercentage();
 }

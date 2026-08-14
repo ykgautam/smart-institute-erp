@@ -1,5 +1,6 @@
 package com.smartinstitute.erp.fee.repository;
 
+import com.smartinstitute.erp.common.enums.fee.FeeStatus;
 import com.smartinstitute.erp.fee.entity.StudentFee;
 import com.smartinstitute.erp.institute.entity.Institute;
 import com.smartinstitute.erp.student.entity.Student;
@@ -30,4 +31,8 @@ public interface StudentFeeRepository
             Institute institute
     );
 
+    long countByInstituteAndStatus(
+            Institute institute,
+            FeeStatus feeStatus
+    );
 }

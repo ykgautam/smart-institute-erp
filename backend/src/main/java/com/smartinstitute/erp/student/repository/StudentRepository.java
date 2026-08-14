@@ -1,6 +1,8 @@
 package com.smartinstitute.erp.student.repository;
 
 import com.smartinstitute.erp.batch.entity.Batch;
+import com.smartinstitute.erp.common.enums.StudentStatus;
+import com.smartinstitute.erp.dashboard.admin.projection.StudentGrowthProjection;
 import com.smartinstitute.erp.institute.entity.Institute;
 import com.smartinstitute.erp.student.entity.Student;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -95,4 +97,36 @@ public interface StudentRepository
     Optional<Student> findByIdAndInstituteAndActiveTrue(Long studentId, Institute institute);
 
     Optional<Student> findByUserId(Long userId);
+
+    long countByInstitute(Institute institute);
+
+    long countByInstituteAndActiveTrue(Institute institute);
+
+    long countByInstituteAndStatus(
+            Institute institute,
+            StudentStatus status
+    );
+
+    @Query(value = """
+        SELECT
+            EXTRACT(YEAR FROM s.created_at)::INTEGER AS year,
+            EXTRACT(MONTH FROM s.created_at)::INTEGER AS month,
+            COUNT(s.id) AS studentCount
+
+        FROM students s
+
+        WHERE s.institute_id = :#{#institute.id}
+
+        GROUP BY
+            EXTRACT(YEAR FROM s.created_at),
+            EXTRACT(MONTH FROM s.created_at)
+
+        ORDER BY
+            year,
+            month
+        """,
+            nativeQuery = true)
+    List<StudentGrowthProjection> getStudentGrowth(
+            Institute institute
+    );
 }

@@ -68,4 +68,11 @@ public interface TestRepository extends JpaRepository<Test, Long> {
             TestStatus status,
             LocalDateTime currentTime
     );
+
+    long countByInstituteAndStatusAndActiveTrueAndStartTimeAfter(
+            Institute institute,
+            TestStatus status,
+            LocalDateTime currentTime
+    );
+
 }

@@ -30,4 +30,5 @@ public interface CourseRepository extends
             Institute institute
     );
 
+    long countByInstitute(Institute institute);
 }

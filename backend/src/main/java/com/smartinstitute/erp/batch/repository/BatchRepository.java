@@ -39,4 +39,6 @@ public interface BatchRepository extends
     );
 
     Optional<Batch> findByIdAndInstitute(Long id, Institute institute);
+
+    long countByInstitute(Institute institute);
 }

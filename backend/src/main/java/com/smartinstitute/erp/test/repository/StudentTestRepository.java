@@ -4,6 +4,7 @@ import com.smartinstitute.erp.common.enums.test.TestStatus;
 import com.smartinstitute.erp.dashboard.projection.CoursePerformanceProjection;
 import com.smartinstitute.erp.dashboard.projection.MonthlyPerformanceProjection;
 import com.smartinstitute.erp.dashboard.projection.TopicPerformanceProjection;
+import com.smartinstitute.erp.institute.entity.Institute;
 import com.smartinstitute.erp.student.entity.Student;
 import com.smartinstitute.erp.test.entity.StudentTest;
 import com.smartinstitute.erp.test.entity.Test;
@@ -15,8 +16,6 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -206,9 +205,7 @@ public interface StudentTestRepository extends
             LIMIT 5
             """,
             nativeQuery = true)
-    List<TopicPerformanceProjection> getStrongTopics(
-            Student student
-    );
+    List<TopicPerformanceProjection> getStrongTopics(Student student);
 
     @Query(value = """
             SELECT
@@ -243,7 +240,67 @@ public interface StudentTestRepository extends
             LIMIT 5
             """,
             nativeQuery = true)
-    List<TopicPerformanceProjection> getWeakTopics(
-            Student student
+    List<TopicPerformanceProjection> getWeakTopics(Student student);
+
+    @Query(value = """
+        SELECT
+            c.id AS courseId,
+
+            c.course_name AS courseName,
+
+            COUNT(st.id) AS testsAttempted,
+
+            SUM(
+                CASE
+                    WHEN st.passed = TRUE THEN 1
+                    ELSE 0
+                END
+            ) AS testsPassed,
+
+            ROUND(
+                AVG(st.percentage),
+                2
+            ) AS averagePercentage,
+
+            ROUND(
+                (
+                    SUM(
+                        CASE
+                            WHEN st.passed = TRUE THEN 1
+                            ELSE 0
+                        END
+                    ) * 100.0
+                ) / NULLIF(COUNT(st.id), 0),
+                2
+            ) AS passPercentage
+
+        FROM student_tests st
+
+        INNER JOIN students s
+                ON st.student_id = s.id
+
+        INNER JOIN tests t
+                ON st.test_id = t.id
+
+        INNER JOIN topics tp
+                ON t.topic_id = tp.id
+
+        INNER JOIN courses c
+                ON tp.course_id = c.id
+
+        WHERE s.institute_id = :#{#institute.id}
+
+          AND st.status = 'SUBMITTED'
+
+        GROUP BY
+            c.id,
+            c.course_name
+
+        ORDER BY
+            c.course_name
+        """,
+            nativeQuery = true)
+    List<CoursePerformanceProjection> getCoursePerformance(
+            Institute institute
     );
 }
