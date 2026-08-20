@@ -14,7 +14,11 @@ import com.smartinstitute.erp.fee.repository.FeePaymentRepository;
 import com.smartinstitute.erp.fee.repository.StudentFeeRepository;
 import com.smartinstitute.erp.fee.service.FeePaymentService;
 import com.smartinstitute.erp.institute.entity.Institute;
+import com.smartinstitute.erp.notification.entity.Notification;
+import com.smartinstitute.erp.notification.enums.NotificationType;
+import com.smartinstitute.erp.notification.service.NotificationService;
 import com.smartinstitute.erp.security.util.SecurityUtil;
+import com.smartinstitute.erp.user.entity.User;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -32,18 +36,21 @@ public class FeePaymentServiceImpl extends BaseCrudService
     private final StudentFeeRepository studentFeeRepository;
     private final FeePaymentMapper feePaymentMapper;
 
+    private final NotificationService notificationService;
+
     public FeePaymentServiceImpl(
             SecurityUtil securityUtil,
             InstituteAccessValidator instituteAccessValidator,
             FeePaymentRepository feePaymentRepository,
             StudentFeeRepository studentFeeRepository,
-            FeePaymentMapper feePaymentMapper) {
+            FeePaymentMapper feePaymentMapper, NotificationService notificationService) {
 
         super(securityUtil, instituteAccessValidator);
 
         this.feePaymentRepository = feePaymentRepository;
         this.studentFeeRepository = studentFeeRepository;
         this.feePaymentMapper = feePaymentMapper;
+        this.notificationService = notificationService;
     }
 
     @Override
@@ -121,6 +128,32 @@ public class FeePaymentServiceImpl extends BaseCrudService
         feePayment = feePaymentRepository.save(feePayment);
 
         studentFeeRepository.save(studentFee);
+
+        /*
+         * Create a notification for the student only when the
+         * student has an associated application user account.
+         *
+         * Some students may exist in the ERP without login access.
+         * In that case, there is no User recipient for an
+         * in-application notification.
+         */
+        User studentUser = studentFee
+                .getStudent()
+                .getUser();
+
+        if (studentUser != null) {
+
+            notificationService.createNotification(
+                    studentUser.getId(),
+                    currentInstitute.getId(),
+                    NotificationType.FEE_PAYMENT_SUCCESS,
+                    "Fee Payment Successful",
+                    "Your fee payment of ₹" + paymentAmount
+                            + " has been successfully recorded.",
+                    "FEE_PAYMENT",
+                    feePayment.getId()
+            );
+        }
 
         return feePaymentMapper.toResponse(feePayment);
     }
