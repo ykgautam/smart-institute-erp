@@ -1,0 +1,21 @@
+/* Structural layout CSS that doesn't map cleanly to MUI sx props.
+   Component-level styling (colors, spacing, typography) stays in MUI. */
+
+.shell {
+  display: flex;
+  min-height: 100vh;
+}
+
+.mainContent {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0; /* prevents flex children from overflowing on small screens */
+}
+
+.contentArea {
+  flex-grow: 1;
+  padding: 24px;
+  background-color: var(--mui-palette-background-default, #f4f6f8);
+  overflow-y: auto;
+}
