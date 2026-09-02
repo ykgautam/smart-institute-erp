@@ -5,6 +5,7 @@ import ProtectedRoute from '@routes/ProtectedRoute';
 import AppLayout from '@components/layout/AppLayout';
 
 import StudentListPage from '@features/students/pages/StudentListPage';
+import CourseListPage from '@features/courses/pages/CourseListPage';
 
 // Temporary placeholders — replaced as each feature module is built
 // in upcoming Sprints. They prove routing/layout wiring only.
@@ -25,6 +26,7 @@ function App() {
           <Route element={<AppLayout />}>
             <Route path="/dashboard" element={<DashboardPlaceholder />} />
             <Route path="/students" element={<StudentListPage />} />
+            <Route path="/courses" element={<CourseListPage />} />
           </Route>
         </Route>
 
