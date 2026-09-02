@@ -4,13 +4,12 @@ import AuthBootstrap from '@features/auth/AuthBootstrap';
 import ProtectedRoute from '@routes/ProtectedRoute';
 import AppLayout from '@components/layout/AppLayout';
 
+import StudentListPage from '@features/students/pages/StudentListPage';
+
 // Temporary placeholders — replaced as each feature module is built
 // in upcoming Sprints. They prove routing/layout wiring only.
 function DashboardPlaceholder() {
   return <div>Dashboard (placeholder)</div>;
-}
-function StudentsPlaceholder() {
-  return <div>Students (placeholder)</div>;
 }
 
 function App() {
@@ -25,7 +24,7 @@ function App() {
         <Route element={<ProtectedRoute />}>
           <Route element={<AppLayout />}>
             <Route path="/dashboard" element={<DashboardPlaceholder />} />
-            <Route path="/students" element={<StudentsPlaceholder />} />
+            <Route path="/students" element={<StudentListPage />} />
           </Route>
         </Route>
 

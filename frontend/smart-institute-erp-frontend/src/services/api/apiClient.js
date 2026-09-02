@@ -92,58 +92,19 @@ apiClient.interceptors.response.use(
       }
     }
 
-    // Normalize error shape for all other cases (400/403/404/409/422/500).
+    // Normalize error shape so components/hooks handle one structure
+    // regardless of which endpoint failed. `errors` may come back under
+    // different keys depending on the backend's GlobalExceptionHandler
+    // (commonly `errors` or `validationErrors` for Bean Validation
+    // failures) — shape not yet fully confirmed, so we check both.
+    // Consumed by normalizeFieldErrors() in studentSchemas.js to map
+    // field-level messages onto form inputs.
     return Promise.reject({
       status,
       message: data?.message || 'Something went wrong. Please try again.',
-      errors: data?.errors || null,
+      errors: data?.errors || data?.validationErrors || null,
     });
   },
 );
 
 export default apiClient;
-
-
-
-// import axios from 'axios';
-
-// import { normalizeApiError } from './apiError';
-
-// const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-
-// const apiClient = axios.create({
-//   baseURL: API_BASE_URL,
-//   timeout: 15000,
-//   headers: {
-//     'Content-Type': 'application/json',
-//   },
-// });
-
-// /**
-//  * Request interceptor.
-//  *
-//  * Authentication will be added in the authentication Part.
-//  * Keeping the interceptor now gives us a single location for
-//  * request-wide configuration later.
-//  */
-// apiClient.interceptors.request.use(
-//   (config) => config,
-//   (error) => Promise.reject(error),
-// );
-
-// /**
-//  * Response interceptor.
-//  *
-//  * Feature services should receive a normalized application error
-//  * instead of having to understand Axios' internal error structure.
-//  */
-// apiClient.interceptors.response.use(
-//   (response) => response,
-//   (error) => {
-//     const normalizedError = normalizeApiError(error);
-
-//     return Promise.reject(normalizedError);
-//   },
-// );
-
-// export default apiClient;
