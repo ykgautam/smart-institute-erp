@@ -6,6 +6,13 @@ import AppLayout from '@components/layout/AppLayout';
 
 import StudentListPage from '@features/students/pages/StudentListPage';
 import CourseListPage from '@features/courses/pages/CourseListPage';
+import BatchListPage from '@features/batches/pages/BatchListPage';
+import FeeStructureListPage from '@features/fees/pages/FeeStructureListPage';
+import StudentFeeListPage from '@features/fees/pages/StudentFeeListPage';
+import MarkAttendancePage from '@features/attendance/pages/MarkAttendancePage';
+import BatchAttendanceRecordsPage from '@features/attendance/pages/BatchAttendanceRecordsPage';
+import StudentAttendanceHistoryPage from '@features/attendance/pages/StudentAttendanceHistoryPage';
+
 
 // Temporary placeholders — replaced as each feature module is built
 // in upcoming Sprints. They prove routing/layout wiring only.
@@ -27,6 +34,14 @@ function App() {
             <Route path="/dashboard" element={<DashboardPlaceholder />} />
             <Route path="/students" element={<StudentListPage />} />
             <Route path="/courses" element={<CourseListPage />} />
+            <Route path="/batches" element={<BatchListPage />} />
+
+            <Route path="/fees/structures" element={<FeeStructureListPage />} />
+            <Route path="/fees/students" element={<StudentFeeListPage />} />
+
+            <Route path="/attendance/mark" element={<MarkAttendancePage />} />
+            <Route path="/attendance/records" element={<BatchAttendanceRecordsPage />} />
+            <Route path="/attendance/history" element={<StudentAttendanceHistoryPage />} />
           </Route>
         </Route>
 

@@ -5,14 +5,10 @@ import GroupsIcon from '@mui/icons-material/GroupsOutlined';
 import PaymentsIcon from '@mui/icons-material/PaymentsOutlined';
 import EventAvailableIcon from '@mui/icons-material/EventAvailableOutlined';
 
-// Declarative navigation source of truth. Each item's `roles` array
-// controls visibility — Sidebar filters against the current user's role
-// rather than hard-coding role checks inside JSX. Add new modules here
-// only; do not scatter route/role logic into layout components.
-//
-// NOTE: `path` values for unbuilt modules (students, courses, etc.) are
-// placeholders and will 404 until those features are implemented in
-// later Sprints — they exist now so the nav shape doesn't need revisiting.
+// Declarative navigation source of truth. Items can now optionally have
+// a `children` array — Sidebar renders these as an expandable sub-menu
+// instead of a direct link. Used for modules with multiple sub-screens
+// (e.g. Fees: Structures + Student Fees + Collection).
 export const NAV_ITEMS = [
   {
     label: 'Dashboard',
@@ -40,15 +36,24 @@ export const NAV_ITEMS = [
   },
   {
     label: 'Fees',
-    path: '/fees',
     icon: PaymentsIcon,
     roles: ['SUPER_ADMIN', 'INSTITUTE_ADMIN', 'ACCOUNTANT'],
+    // No `path` at this level — clicking "Fees" expands the sub-menu
+    // instead of navigating directly (see Sidebar.jsx).
+    children: [
+      { label: 'Fee Structures', path: '/fees/structures', roles: ['SUPER_ADMIN', 'INSTITUTE_ADMIN'] },
+      { label: 'Student Fees', path: '/fees/students', roles: ['SUPER_ADMIN', 'INSTITUTE_ADMIN', 'ACCOUNTANT'] },
+    ],
   },
   {
     label: 'Attendance',
-    path: '/attendance',
     icon: EventAvailableIcon,
     roles: ['SUPER_ADMIN', 'INSTITUTE_ADMIN', 'STAFF', 'FACULTY'],
+    children: [
+      { label: 'Mark Attendance', path: '/attendance/mark', roles: ['SUPER_ADMIN', 'INSTITUTE_ADMIN', 'STAFF', 'FACULTY'] },
+      { label: 'Attendance Records', path: '/attendance/records', roles: ['SUPER_ADMIN', 'INSTITUTE_ADMIN', 'STAFF', 'FACULTY'] },
+      { label: 'Student History', path: '/attendance/history', roles: ['SUPER_ADMIN', 'INSTITUTE_ADMIN', 'STAFF', 'FACULTY'] },
+    ],
   },
 ];
 

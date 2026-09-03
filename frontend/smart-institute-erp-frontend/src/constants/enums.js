@@ -155,3 +155,17 @@ export function getAttendanceStatusColor(status) {
 export function getCourseStatusColor(status) {
   return status === COURSE_STATUS.ACTIVE ? 'success' : 'default';
 }
+
+export function getBatchStatusColor(status) {
+  switch (status) {
+    case BATCH_STATUS.ACTIVE:
+      return 'success';
+    case BATCH_STATUS.COMPLETED:
+      return 'info';
+    case BATCH_STATUS.CANCELLED:
+      return 'error';
+    case BATCH_STATUS.PLANNED:
+    default:
+      return 'default';
+  }
+}

@@ -9,17 +9,17 @@ import {
   Toolbar,
   IconButton,
   Tooltip,
+  Collapse,
   useMediaQuery,
 } from '@mui/material';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useTheme } from '@mui/material/styles';
 import { NAV_ITEMS, SIDEBAR_WIDTH_EXPANDED, SIDEBAR_WIDTH_COLLAPSED } from '@constants/navConfig';
 import { useAuth } from '@hooks/useAuth';
 
-// Persistent sidebar navigation. Collapses to icon-only rather than
-// hiding entirely on tablets — ERP users typically keep navigation
-// visible while working, per Section 17 (desktop-first, usable smaller).
 function Sidebar() {
   const theme = useTheme();
   const navigate = useNavigate();
@@ -27,14 +27,17 @@ function Sidebar() {
   const { hasRole } = useAuth();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
 
-  // Auto-collapse on smaller screens by default; user can still toggle manually.
   const [collapsed, setCollapsed] = useState(isSmallScreen);
+  // Tracks which parent items (e.g. "Fees") are expanded, by label.
+  const [expandedItems, setExpandedItems] = useState({});
 
   const width = collapsed ? SIDEBAR_WIDTH_COLLAPSED : SIDEBAR_WIDTH_EXPANDED;
 
-  // Filter nav items by role here — the ONLY place this filtering happens,
-  // so navConfig stays pure data and role logic stays in useAuth.
   const visibleItems = NAV_ITEMS.filter((item) => hasRole(item.roles));
+
+  const toggleExpand = (label) => {
+    setExpandedItems((prev) => ({ ...prev, [label]: !prev[label] }));
+  };
 
   return (
     <Drawer
@@ -65,18 +68,78 @@ function Sidebar() {
       </Toolbar>
 
       <List>
-        {visibleItems.map(({ label, path, icon: Icon }) => {
-          const isActive = location.pathname.startsWith(path);
+        {visibleItems.map((item) => {
+          const { label, path, icon: Icon, children } = item;
+          const hasChildren = Array.isArray(children) && children.length > 0;
+          const visibleChildren = hasChildren ? children.filter((c) => hasRole(c.roles)) : [];
+          const isActive = path ? location.pathname.startsWith(path) : false;
+          const isParentActive = visibleChildren.some((c) => location.pathname.startsWith(c.path));
+          const isExpanded = expandedItems[label] || isParentActive;
+
+          // Parent item with children: clicking toggles expand/collapse
+          // instead of navigating (it has no `path` of its own).
+          if (hasChildren) {
+            const parentButton = (
+              <ListItemButton
+                key={label}
+                selected={isParentActive}
+                onClick={() => (collapsed ? setCollapsed(false) : toggleExpand(label))}
+                sx={{ minHeight: 48, justifyContent: collapsed ? 'center' : 'initial', px: 2.5 }}
+              >
+                <ListItemIcon sx={{ minWidth: 0, mr: collapsed ? 0 : 2, justifyContent: 'center' }}>
+                  <Icon color={isParentActive ? 'primary' : 'inherit'} />
+                </ListItemIcon>
+                {!collapsed && (
+                  <>
+                    <ListItemText primary={label} />
+                    {isExpanded ? <ExpandLessIcon fontSize="small" /> : <ExpandMoreIcon fontSize="small" />}
+                  </>
+                )}
+              </ListItemButton>
+            );
+
+            return (
+              <div key={label}>
+                {collapsed ? (
+                  <Tooltip title={label} placement="right">
+                    {parentButton}
+                  </Tooltip>
+                ) : (
+                  parentButton
+                )}
+                {!collapsed && (
+                  <Collapse in={isExpanded} timeout="auto" unmountOnExit>
+                    <List component="div" disablePadding>
+                      {visibleChildren.map((child) => {
+                        const childActive = location.pathname.startsWith(child.path);
+                        return (
+                          <ListItemButton
+                            key={child.path}
+                            selected={childActive}
+                            onClick={() => navigate(child.path)}
+                            sx={{ pl: 6, minHeight: 40 }}
+                          >
+                            <ListItemText
+                              primary={child.label}
+                              primaryTypographyProps={{ fontSize: '0.875rem' }}
+                            />
+                          </ListItemButton>
+                        );
+                      })}
+                    </List>
+                  </Collapse>
+                )}
+              </div>
+            );
+          }
+
+          // Regular leaf item (no children) — same as before.
           const button = (
             <ListItemButton
               key={path}
               selected={isActive}
               onClick={() => navigate(path)}
-              sx={{
-                minHeight: 48,
-                justifyContent: collapsed ? 'center' : 'initial',
-                px: 2.5,
-              }}
+              sx={{ minHeight: 48, justifyContent: collapsed ? 'center' : 'initial', px: 2.5 }}
             >
               <ListItemIcon sx={{ minWidth: 0, mr: collapsed ? 0 : 2, justifyContent: 'center' }}>
                 <Icon color={isActive ? 'primary' : 'inherit'} />
@@ -85,7 +148,6 @@ function Sidebar() {
             </ListItemButton>
           );
 
-          // Tooltip only needed when collapsed — label is hidden, icon alone is ambiguous.
           return collapsed ? (
             <Tooltip title={label} placement="right" key={path}>
               {button}

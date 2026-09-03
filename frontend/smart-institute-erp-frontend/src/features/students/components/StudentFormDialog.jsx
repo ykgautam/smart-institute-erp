@@ -139,11 +139,10 @@ function StudentFormDialog({ open, mode, initialData, onClose, onSuccess }) {
     <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
       <DialogTitle>{isEdit ? 'Edit Student' : 'Add Student'}</DialogTitle>
       <DialogContent>
+
         <Grid container spacing={2} sx={{ mt: 0.5 }}>
-          {/* Admission number is immutable after creation — matches
-              UpdateStudentRequest not having this field at all. */}
           {!isEdit && (
-            <Grid item xs={12} sm={6}>
+            <Grid size={{ xs: 12, sm: 6 }}>
               <Controller
                 name="admissionNumber"
                 control={control}
@@ -160,7 +159,7 @@ function StudentFormDialog({ open, mode, initialData, onClose, onSuccess }) {
             </Grid>
           )}
 
-          <Grid item xs={12} sm={6}>
+          <Grid size={{ xs: 12, sm: 6 }}>
             <Controller
               name="rollNumber"
               control={control}
@@ -176,7 +175,7 @@ function StudentFormDialog({ open, mode, initialData, onClose, onSuccess }) {
             />
           </Grid>
 
-          <Grid item xs={12} sm={6}>
+          <Grid size={{ xs: 12, sm: 6 }}>
             <Controller
               name="firstName"
               control={control}
@@ -193,7 +192,7 @@ function StudentFormDialog({ open, mode, initialData, onClose, onSuccess }) {
             />
           </Grid>
 
-          <Grid item xs={12} sm={6}>
+          <Grid size={{ xs: 12, sm: 6 }}>
             <Controller
               name="lastName"
               control={control}
@@ -209,7 +208,7 @@ function StudentFormDialog({ open, mode, initialData, onClose, onSuccess }) {
             />
           </Grid>
 
-          <Grid item xs={12} sm={6}>
+          <Grid size={{ xs: 12, sm: 6 }}>
             <Controller
               name="gender"
               control={control}
@@ -231,7 +230,7 @@ function StudentFormDialog({ open, mode, initialData, onClose, onSuccess }) {
             />
           </Grid>
 
-          <Grid item xs={12} sm={6}>
+          <Grid size={{ xs: 12, sm: 6 }}>
             <Controller
               name="dateOfBirth"
               control={control}
@@ -241,7 +240,7 @@ function StudentFormDialog({ open, mode, initialData, onClose, onSuccess }) {
                   fullWidth
                   type="date"
                   label="Date of Birth"
-                  InputLabelProps={{ shrink: true }}
+                  slotProps={{ inputLabel: { shrink: true } }}
                   error={!!errors.dateOfBirth}
                   helperText={errors.dateOfBirth?.message}
                 />
@@ -249,7 +248,7 @@ function StudentFormDialog({ open, mode, initialData, onClose, onSuccess }) {
             />
           </Grid>
 
-          <Grid item xs={12} sm={6}>
+          <Grid size={{ xs: 12, sm: 6 }}>
             <Controller
               name="mobile"
               control={control}
@@ -265,7 +264,7 @@ function StudentFormDialog({ open, mode, initialData, onClose, onSuccess }) {
             />
           </Grid>
 
-          <Grid item xs={12} sm={6}>
+          <Grid size={{ xs: 12, sm: 6 }}>
             <Controller
               name="email"
               control={control}
@@ -281,7 +280,7 @@ function StudentFormDialog({ open, mode, initialData, onClose, onSuccess }) {
             />
           </Grid>
 
-          <Grid item xs={12} sm={6}>
+          <Grid size={{ xs: 12, sm: 6 }}>
             <Controller
               name="fatherName"
               control={control}
@@ -298,7 +297,7 @@ function StudentFormDialog({ open, mode, initialData, onClose, onSuccess }) {
             />
           </Grid>
 
-          <Grid item xs={12} sm={6}>
+          <Grid size={{ xs: 12, sm: 6 }}>
             <Controller
               name="motherName"
               control={control}
@@ -314,7 +313,7 @@ function StudentFormDialog({ open, mode, initialData, onClose, onSuccess }) {
             />
           </Grid>
 
-          <Grid item xs={12} sm={6}>
+          <Grid size={{ xs: 12, sm: 6 }}>
             <Controller
               name="guardianMobile"
               control={control}
@@ -330,7 +329,7 @@ function StudentFormDialog({ open, mode, initialData, onClose, onSuccess }) {
             />
           </Grid>
 
-          <Grid item xs={12} sm={6}>
+          <Grid size={{ xs: 12, sm: 6 }}>
             <Controller
               name="admissionDate"
               control={control}
@@ -340,7 +339,7 @@ function StudentFormDialog({ open, mode, initialData, onClose, onSuccess }) {
                   fullWidth
                   type="date"
                   label="Admission Date"
-                  InputLabelProps={{ shrink: true }}
+                  slotProps={{ inputLabel: { shrink: true } }}
                   error={!!errors.admissionDate}
                   helperText={errors.admissionDate?.message}
                 />
@@ -348,7 +347,7 @@ function StudentFormDialog({ open, mode, initialData, onClose, onSuccess }) {
             />
           </Grid>
 
-          <Grid item xs={12}>
+          <Grid size={12}>
             <Controller
               name="address"
               control={control}
@@ -366,7 +365,7 @@ function StudentFormDialog({ open, mode, initialData, onClose, onSuccess }) {
             />
           </Grid>
 
-          <Grid item xs={12} sm={4}>
+          <Grid size={{ xs: 12, sm: 4 }}>
             <Controller
               name="city"
               control={control}
@@ -376,7 +375,7 @@ function StudentFormDialog({ open, mode, initialData, onClose, onSuccess }) {
             />
           </Grid>
 
-          <Grid item xs={12} sm={4}>
+          <Grid size={{ xs: 12, sm: 4 }}>
             <Controller
               name="state"
               control={control}
@@ -386,7 +385,7 @@ function StudentFormDialog({ open, mode, initialData, onClose, onSuccess }) {
             />
           </Grid>
 
-          <Grid item xs={12} sm={4}>
+          <Grid size={{ xs: 12, sm: 4 }}>
             <Controller
               name="pincode"
               control={control}

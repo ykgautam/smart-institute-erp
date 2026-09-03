@@ -74,7 +74,7 @@ function CourseFormDialog({ open, mode, initialData, onClose, onSuccess }) {
       <DialogTitle>{isEdit ? 'Edit Course' : 'Add Course'}</DialogTitle>
       <DialogContent>
         <Grid container spacing={2} sx={{ mt: 0.5 }}>
-          <Grid item xs={12} sm={6}>
+          <Grid size={{ xs: 12, sm: 6 }}>
             <Controller
               name="courseCode"
               control={control}
@@ -90,7 +90,7 @@ function CourseFormDialog({ open, mode, initialData, onClose, onSuccess }) {
               )}
             />
           </Grid>
-          <Grid item xs={12} sm={6}>
+          <Grid size={{ xs: 12, sm: 6 }}>
             <Controller
               name="courseName"
               control={control}
@@ -106,7 +106,7 @@ function CourseFormDialog({ open, mode, initialData, onClose, onSuccess }) {
               )}
             />
           </Grid>
-          <Grid item xs={12}>
+          <Grid size={12}>
             <Controller
               name="description"
               control={control}
@@ -123,8 +123,7 @@ function CourseFormDialog({ open, mode, initialData, onClose, onSuccess }) {
               )}
             />
           </Grid>
-          
-                  <Grid item xs={12} sm={3}>
+          <Grid size={{ xs: 12, sm: 3 }}>
             <Controller
               name="duration"
               control={control}
@@ -141,7 +140,7 @@ function CourseFormDialog({ open, mode, initialData, onClose, onSuccess }) {
               )}
             />
           </Grid>
-          <Grid item xs={12} sm={5}>
+          <Grid size={{ xs: 12, sm: 5 }}>
             <Controller
               name="durationType"
               control={control}
@@ -163,7 +162,7 @@ function CourseFormDialog({ open, mode, initialData, onClose, onSuccess }) {
               )}
             />
           </Grid>
-          <Grid item xs={12} sm={4}>
+          <Grid size={{ xs: 12, sm: 4 }}>
             <Controller
               name="fee"
               control={control}
@@ -180,7 +179,6 @@ function CourseFormDialog({ open, mode, initialData, onClose, onSuccess }) {
               )}
             />
           </Grid>
-          
         </Grid>
       </DialogContent>
       <DialogActions>
