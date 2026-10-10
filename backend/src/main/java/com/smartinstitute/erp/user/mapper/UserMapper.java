@@ -43,6 +43,8 @@ public class UserMapper {
                 .gender(user.getGender())
                 .status(user.getStatus())
                 .role(user.getRole().getName())
+                .instituteId(user.getInstitute() != null ? user.getInstitute().getId() : null)
+                .instituteName(user.getInstitute() != null ? user.getInstitute().getName() : null)
                 .build();
     }
 

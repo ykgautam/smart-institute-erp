@@ -26,4 +26,8 @@ public class UserResponse {
 
     private RoleType role;
 
+    private Long instituteId;
+
+    private String instituteName;
+
 }

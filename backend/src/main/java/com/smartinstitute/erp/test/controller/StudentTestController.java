@@ -58,7 +58,7 @@ public class StudentTestController {
     }
 
     @GetMapping("/my-tests")
-    @PreAuthorize("hasAnyRole('STUDENT','SUPER_ADMIN)")
+    @PreAuthorize("hasAnyRole('STUDENT','SUPER_ADMIN')")
     @Operation(summary = "Get My Test History")
     public ResponseEntity<ApiResponse<List<StudentTestSummaryResponse>>> getMyTests() {
 

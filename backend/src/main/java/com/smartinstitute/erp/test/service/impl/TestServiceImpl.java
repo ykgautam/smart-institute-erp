@@ -394,6 +394,8 @@ public class TestServiceImpl extends BaseCrudService implements TestService {
          */
         test.getTestQuestions().clear();
 
+        testRepository.saveAndFlush(test); // forces DELETE to execute NOW, before inserts
+
         /*
          * Add updated questions.
          */

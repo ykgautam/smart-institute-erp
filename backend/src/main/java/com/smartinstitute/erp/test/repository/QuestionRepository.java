@@ -93,6 +93,33 @@ public interface QuestionRepository extends JpaRepository<Question, Long> {
                 q.displayOrder,
                 q.questionText
             """)
+    List<Question> searchQuestions1(
+            @Param("institute") Institute institute,
+            @Param("course") Course course,
+            @Param("topic") Topic topic,
+            @Param("difficulty") QuestionDifficulty difficulty,
+            @Param("questionType") QuestionType questionType,
+            @Param("keyword") String keyword
+    );
+
+    @Query("""
+        SELECT q
+        FROM Question q
+        WHERE q.institute = :institute
+          AND q.active = true
+          AND (:course IS NULL OR q.course = :course)
+          AND (:topic IS NULL OR q.topic = :topic)
+          AND (:difficulty IS NULL OR q.difficulty = :difficulty)
+          AND (:questionType IS NULL OR q.questionType = :questionType)
+          AND (
+                CAST(:keyword AS string) IS NULL
+                OR LOWER(q.questionText)
+                   LIKE LOWER(CONCAT('%', CAST(:keyword AS string), '%'))
+          )
+        ORDER BY
+            q.displayOrder,
+            q.questionText
+        """)
     List<Question> searchQuestions(
             @Param("institute") Institute institute,
             @Param("course") Course course,

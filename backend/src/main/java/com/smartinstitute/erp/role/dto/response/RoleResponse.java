@@ -1,0 +1,22 @@
+package com.smartinstitute.erp.role.dto.response;
+
+import com.smartinstitute.erp.common.enums.RoleType;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class RoleResponse {
+
+    private Long id;
+
+    private RoleType name;
+
+    private String description;
+}
