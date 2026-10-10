@@ -11,6 +11,8 @@ import { getCourseColumns } from '../constants/courseColumns';
 import { courseApi } from '@services/api/courseApi';
 import { useAuth } from '@hooks/useAuth';
 import { showSnackbar } from '@components/feedback/snackbarStore';
+import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
+import CourseStatusDialog from '../components/CourseStatusDialog';
 
 function CourseListPage() {
   const {
@@ -38,6 +40,7 @@ function CourseListPage() {
   const [confirmTarget, setConfirmTarget] = useState(null);
   const [deleting, setDeleting] = useState(false);
   const [formState, setFormState] = useState(null);
+  const [statusTarget, setStatusTarget] = useState(null);
 
   const handleDeleteConfirm = async () => {
     if (!confirmTarget) return;
@@ -66,6 +69,11 @@ function CourseListPage() {
             headerName: 'Actions',
             render: (row) => (
               <Box sx={{ display: 'flex', gap: 0.5 }}>
+                <Tooltip title="Change Status">
+                <IconButton size="small" onClick={() => setStatusTarget(row)}>
+                  <SwapHorizIcon fontSize="small" />
+                </IconButton>
+              </Tooltip>
                 <Tooltip title="Edit">
                   <IconButton size="small" onClick={() => setFormState({ mode: 'edit', course: row })}>
                     <EditIcon fontSize="small" />
@@ -121,6 +129,15 @@ function CourseListPage() {
         onConfirm={handleDeleteConfirm}
         onCancel={() => setConfirmTarget(null)}
       />
+
+      {statusTarget && (
+        <CourseStatusDialog
+          open={!!statusTarget}
+          course={statusTarget}
+          onClose={() => setStatusTarget(null)}
+          onSuccess={refetch}
+        />
+      )}
 
       {formState && (
         <CourseFormDialog

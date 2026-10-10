@@ -169,3 +169,61 @@ export function getBatchStatusColor(status) {
       return 'default';
   }
 }
+
+export function getUserStatusColor(status) {
+  switch (status) {
+    case USER_STATUS.ACTIVE:
+      return 'success';
+    case USER_STATUS.LOCKED:
+      return 'warning';
+    case USER_STATUS.DELETED:
+      return 'error';
+    case USER_STATUS.INACTIVE:
+    default:
+      return 'default';
+  }
+}
+
+export const NOTIFICATION_TYPE = {
+  GENERAL: 'GENERAL',
+  ANNOUNCEMENT: 'ANNOUNCEMENT',
+  FEE_REMINDER: 'FEE_REMINDER',
+  FEE_PAYMENT_SUCCESS: 'FEE_PAYMENT_SUCCESS',
+  ATTENDANCE_ALERT: 'ATTENDANCE_ALERT',
+  EXAM_SCHEDULE: 'EXAM_SCHEDULE',
+  EXAM_RESULT: 'EXAM_RESULT',
+  BATCH_UPDATE: 'BATCH_UPDATE',
+  SYSTEM: 'SYSTEM',
+};
+
+export const AUDIT_ACTION = {
+  CREATE: 'CREATE',
+  UPDATE: 'UPDATE',
+  DELETE: 'DELETE',
+  ACTIVATE: 'ACTIVATE',
+  DEACTIVATE: 'DEACTIVATE',
+  LOGIN: 'LOGIN',
+  LOGOUT: 'LOGOUT',
+  FAILED: 'FAILED',
+  SECURITY_EVENT: 'SECURITY_EVENT',
+};
+
+export function getAuditActionColor(action) {
+  switch (action) {
+    case AUDIT_ACTION.CREATE:
+    case AUDIT_ACTION.ACTIVATE:
+    case AUDIT_ACTION.LOGIN:
+      return 'success';
+    case AUDIT_ACTION.UPDATE:
+      return 'info';
+    case AUDIT_ACTION.DELETE:
+    case AUDIT_ACTION.DEACTIVATE:
+    case AUDIT_ACTION.FAILED:
+    case AUDIT_ACTION.SECURITY_EVENT:
+      return 'error';
+    case AUDIT_ACTION.LOGOUT:
+    default:
+      return 'default';
+  }
+}
+

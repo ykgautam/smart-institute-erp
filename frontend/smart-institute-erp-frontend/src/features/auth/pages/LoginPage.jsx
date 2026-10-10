@@ -6,6 +6,9 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { Box, Paper, TextField, Button, Typography, Alert } from '@mui/material';
 import { loginSchema } from '@schemas/authSchemas';
 import { loginUser, fetchCurrentUser } from '@features/auth/authSlice';
+import { Link as RouterLink } from 'react-router-dom';
+import { Link } from '@mui/material';
+
 
 function LoginPage() {
   const dispatch = useDispatch();
@@ -93,6 +96,9 @@ function LoginPage() {
           >
             {isSubmitting ? 'Signing in...' : 'Sign In'}
           </Button>
+          <Typography variant="body2" align="center" sx={{ mt: 2 }}>
+          New institute? <Link component={RouterLink} to="/onboard">Register here</Link>
+        </Typography>
         </Box>
       </Paper>
     </Box>

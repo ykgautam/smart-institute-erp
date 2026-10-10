@@ -15,6 +15,8 @@ import {
 import LogoutIcon from '@mui/icons-material/Logout';
 import LockResetIcon from '@mui/icons-material/LockReset';
 import { useAuth } from '@hooks/useAuth';
+import NotificationBell from '@features/notifications/components/NotificationBell';
+import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
 
 // Topbar shows the authenticated user's identity and houses account
 // actions (logout, change password). Kept separate from Sidebar since
@@ -33,7 +35,10 @@ function Topbar() {
 
   // Falls back gracefully if `user` hasn't loaded yet (e.g. brief window
   // during AuthBootstrap's fetchCurrentUser call).
-  const displayName = user?.fullName || user?.email || 'User';
+// UserResponse (confirmed via /auth/me) has firstName/lastName
+// separately — there's no combined `fullName` field like StudentResponse
+// has, so we concatenate here.
+  const displayName = user ? `${user.firstName} ${user.lastName || ''}`.trim() : 'User';
   const initial = displayName.charAt(0).toUpperCase();
 
   return (
@@ -54,6 +59,7 @@ function Topbar() {
               {user.instituteName}
             </Typography>
           )}
+          <NotificationBell />
           <IconButton onClick={(e) => setAnchorEl(e.currentTarget)} size="small">
             <Avatar sx={{ width: 34, height: 34, bgcolor: 'primary.main' }}>{initial}</Avatar>
           </IconButton>
@@ -69,6 +75,10 @@ function Topbar() {
             </Typography>
           </Box>
           <Divider />
+          <MenuItem onClick={() => { setAnchorEl(null); navigate('/my-profile'); }}>
+            <ListItemIcon><PersonOutlinedIcon fontSize="small" /></ListItemIcon>
+            My Profile
+          </MenuItem>
           <MenuItem onClick={() => { setAnchorEl(null); navigate('/change-password'); }}>
             <ListItemIcon><LockResetIcon fontSize="small" /></ListItemIcon>
             Change Password

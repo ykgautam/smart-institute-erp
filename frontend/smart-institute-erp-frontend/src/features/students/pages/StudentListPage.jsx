@@ -14,6 +14,8 @@ import { getStudentColumns } from '../constants/studentColumns';
 import { studentApi } from '@services/api/studentApi';
 import { useAuth } from '@hooks/useAuth';
 import { showSnackbar } from '@components/feedback/snackbarStore';
+import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
+import StudentStatusDialog from '../components/StudentStatusDialog';
 
 function StudentListPage() {
   const {
@@ -32,6 +34,7 @@ function StudentListPage() {
   const [assignTarget, setAssignTarget] = useState(null); // student row, or null
   const [removeTarget, setRemoveTarget] = useState(null); // student row, or null
   const [removingBatch, setRemovingBatch] = useState(false);
+  const [statusTarget, setStatusTarget] = useState(null);
 
   const handleDeactivateConfirm = async () => {
     if (!confirmTarget) return;
@@ -80,6 +83,11 @@ function StudentListPage() {
                     <EditIcon fontSize="small" />
                   </IconButton>
                 </Tooltip>
+                <Tooltip title="Change Status">
+                  <IconButton size="small" onClick={() => setStatusTarget(row)}>
+                    <SwapHorizIcon fontSize="small" />
+                  </IconButton>
+              </Tooltip>
                 <Tooltip title="Assign to Batch">
                   <IconButton size="small" disabled={!row.active} onClick={() => setAssignTarget(row)}>
                     <GroupAddIcon fontSize="small" />
@@ -168,6 +176,15 @@ function StudentListPage() {
           open={!!assignTarget}
           student={assignTarget}
           onClose={() => setAssignTarget(null)}
+          onSuccess={refetch}
+        />
+      )}
+
+      {statusTarget && (
+        <StudentStatusDialog
+          open={!!statusTarget}
+          student={statusTarget}
+          onClose={() => setStatusTarget(null)}
           onSuccess={refetch}
         />
       )}
