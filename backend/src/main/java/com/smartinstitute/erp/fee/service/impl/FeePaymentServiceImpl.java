@@ -15,6 +15,7 @@ import com.smartinstitute.erp.fee.repository.StudentFeeRepository;
 import com.smartinstitute.erp.fee.service.FeePaymentService;
 import com.smartinstitute.erp.institute.entity.Institute;
 import com.smartinstitute.erp.notification.entity.Notification;
+import com.smartinstitute.erp.finance.service.FinancialFeeIncomePostingService;
 import com.smartinstitute.erp.notification.enums.NotificationType;
 import com.smartinstitute.erp.notification.service.NotificationService;
 import com.smartinstitute.erp.security.util.SecurityUtil;
@@ -27,6 +28,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+
 @Service
 @Transactional
 public class FeePaymentServiceImpl extends BaseCrudService
@@ -37,13 +39,14 @@ public class FeePaymentServiceImpl extends BaseCrudService
     private final FeePaymentMapper feePaymentMapper;
 
     private final NotificationService notificationService;
+    private final FinancialFeeIncomePostingService financialFeeIncomePostingService;
 
     public FeePaymentServiceImpl(
             SecurityUtil securityUtil,
             InstituteAccessValidator instituteAccessValidator,
             FeePaymentRepository feePaymentRepository,
             StudentFeeRepository studentFeeRepository,
-            FeePaymentMapper feePaymentMapper, NotificationService notificationService) {
+            FeePaymentMapper feePaymentMapper, NotificationService notificationService, FinancialFeeIncomePostingService financialFeeIncomePostingService) {
 
         super(securityUtil, instituteAccessValidator);
 
@@ -51,6 +54,7 @@ public class FeePaymentServiceImpl extends BaseCrudService
         this.studentFeeRepository = studentFeeRepository;
         this.feePaymentMapper = feePaymentMapper;
         this.notificationService = notificationService;
+        this.financialFeeIncomePostingService = financialFeeIncomePostingService;
     }
 
     @Override
@@ -126,6 +130,10 @@ public class FeePaymentServiceImpl extends BaseCrudService
         feePayment.setReceiptNumber(generateReceiptNumber());
 
         feePayment = feePaymentRepository.save(feePayment);
+
+        // The payment ID is required as the source ID for the ledger entry.
+        // Both operations participate in the same transaction.
+        financialFeeIncomePostingService.postFeePaymentIncome(feePayment);
 
         studentFeeRepository.save(studentFee);
 
